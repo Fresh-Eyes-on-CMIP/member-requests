@@ -1,0 +1,29 @@
+name: Grant Read-Only Access
+
+on:
+  repository_dispatch:
+    types: [grant_read_access]
+
+jobs:
+  add-user:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check required inputs
+        env:
+          USERNAME: ${{ github.event.client_payload.username }}
+        run: |
+          if [[ -z "$USERNAME" ]]; then
+            echo "Missing username in payload"
+            exit 1
+          fi
+
+      - name: Grant Read-Only Access
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          USERNAME: ${{ github.event.client_payload.username }}
+        run: |
+          gh api -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/$REPO/collaborators/$USERNAME" \
+            -f permission=read
