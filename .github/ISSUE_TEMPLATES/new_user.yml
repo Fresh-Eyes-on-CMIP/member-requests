@@ -1,0 +1,29 @@
+name: 'Add/Modify: Experiment'
+description: 'Type: experiment'
+title: 'Add/Modify: Experiment: <Type experiment name here>'
+labels:
+    - delta
+    - experiment
+body:
+
+-   type: markdown
+    attributes:
+        value: |
+            ####
+            # Request to become a new user. 
+
+            In order to keep our discussions free of spam and unrelated content, we require everyone to be an existing user on github. 
+            In filling out this form you will be added to the organisation allowing you to interact with private discussions. 
+          
+            * The user account you are currently logged on with will be the one that gets registered *
+    
+-   id: reason
+    attributes:
+        label: "Why do you want to join?"
+        description: |
+            Use this section to prove you are not a robot. 
+            
+            You may also choose to provide any additional skills/information/tasks you may be interested in or want to be considered for. 
+    validations:
+        required: true
+    type: textarea
