@@ -1,6 +1,7 @@
 name: 'new-member-discussions'
 description: 'A form to add users to the open, but hudden discussions repository'
 title: 'A new equest to be added to the FEoC discussions: <name>'
+labels: ['discussion-user']
 
 body:
 
