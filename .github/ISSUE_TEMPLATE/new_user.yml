@@ -34,5 +34,5 @@ body:
 -   type: markdown
     attributes:
         value: |
-            Add link to FEOC mailing list registration here 
+            Add link to FEOC mailing list registration (here)[here.com]
     
