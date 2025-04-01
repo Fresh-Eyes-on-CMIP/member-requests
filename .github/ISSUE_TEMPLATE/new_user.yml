@@ -1,9 +1,7 @@
-name: 'Add/Modify: Experiment'
-description: 'Type: experiment'
-title: 'Add/Modify: Experiment: <Type experiment name here>'
-labels:
-    - delta
-    - experiment
+name: 'new-member-discussions'
+description: 'A form to add users to the open, but hudden discussions repository'
+title: 'new-member-discussions'
+
 body:
 
 -   type: markdown
