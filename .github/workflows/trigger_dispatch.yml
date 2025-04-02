@@ -33,6 +33,11 @@ jobs:
             echo "Error: Username is empty."
             exit 1
           fi
+          
+          echo "Username: $USERNAME";
+          
+          echo "USERNAME=$USERNAME" >> $GITHUB_ENV
+          
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           GH_TOKEN: ${{ github.token }}
@@ -42,7 +47,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           USERNAME: ${{ env.USERNAME }}
         run: |
-          RESPONSE=$(gh api -X POST repos/Fresh-Eyes-on-CMIP/dispatches --input - <<EOF
+          RESPONSE=$(gh api -X POST repos/Fresh-Eyes-on-CMIP/actions/workflows/new_member.yml/dispatches --input - <<EOF
           {
             "event_type": "read-access",
             "client_payload": {
