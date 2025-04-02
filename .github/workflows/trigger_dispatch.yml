@@ -19,24 +19,23 @@ jobs:
             echo "ISSUE_NUMBER is set to $ISSUE_NUMBER"
           fi
 
-      - name: Get username from issue
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
+      - name: Retrieve Username from Issue
         run: |
-          USERNAME=$(gh issue view $ISSUE_NUMBER --repo "$GITHUB_REPOSITORY" --json author --jq .author.login 2>&1)
-          if [[ $? -ne 0 ]]; then
-            echo "Error: Could not retrieve username from issue."
-            echo "Debug info: $USERNAME"
-            exit 1
-          fi
-          USERNAME=$(echo "$USERNAME" | jq -r '.author.login')
+          set -e
+          echo "Fetching issue details for ISSUE_NUMBER: $ISSUE_NUMBER"
+          ISSUE_DETAILS=$(gh issue view $ISSUE_NUMBER --repo "$GITHUB_REPOSITORY" --json author)
+          echo "Issue Details: $ISSUE_DETAILS"
+          
+          USERNAME=$(echo "$ISSUE_DETAILS" | jq -r '.author.login')
+          echo "Username: $USERNAME"
+  
           if [[ -z "$USERNAME" ]]; then
             echo "Error: Username is empty."
             exit 1
           fi
-          echo "Username retrieved: $USERNAME"
-          echo "USERNAME=$USERNAME" >> $GITHUB_ENV
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
 
       - name: Dispatch event
         env:
