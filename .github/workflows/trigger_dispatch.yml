@@ -24,7 +24,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
-          USERNAME=$(gh issue view "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --json author --jq .author.login 2>&1)
+          USERNAME=$(gh issue view $ISSUE_NUMBER --repo "$GITHUB_REPOSITORY" --json author --jq .author.login 2>&1)
           if [[ $? -ne 0 ]]; then
             echo "Error: Could not retrieve username from issue."
             echo "Debug info: $USERNAME"
