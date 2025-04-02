@@ -8,9 +8,21 @@ jobs:
   dispatch-event:
     runs-on: ubuntu-latest
     steps:
+      - name: Check for ISSUE_NUMBER
+        env:
+          ISSUE_NUMBER: "${{ github.event.issue.number }}"
+        run: |
+          if [[ -z "$ISSUE_NUMBER" ]]; then
+            echo "Error: ISSUE_NUMBER is not set."
+            exit 1
+          else
+            echo "ISSUE_NUMBER is set to $ISSUE_NUMBER"
+          fi
+
       - name: Get username from issue
         env:
           GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: "${{ github.event.issue.number }}"
         run: |
           USERNAME=$(gh issue view "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --json author --jq .author.login)
           if [[ -z "$USERNAME" ]]; then
