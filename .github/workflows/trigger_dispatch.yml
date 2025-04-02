@@ -21,8 +21,9 @@ jobs:
       - name: Dispatch event
         env:
           GH_TOKEN: ${{ github.token }}
+          
         run: |
-          RESPONSE=$(gh api -X POST repos/$TARGET_REPO/dispatches --input - <<EOF
+          RESPONSE=$(gh api -X POST repos/Fresh-Eyes-on-CMIP/dispatches --input - <<EOF
           {
             "event_type": "read-access",
             "client_payload": {
