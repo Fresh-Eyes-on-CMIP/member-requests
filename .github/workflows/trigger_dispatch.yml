@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get username from issue
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           USERNAME=$(gh api repos/$REPO/issues/$ISSUE_NUMBER --jq .user.login)
           if [[ -z "$USERNAME" ]]; then
@@ -17,6 +19,8 @@ jobs:
           fi
           echo "Username retrieved: $USERNAME"
       - name: Dispatch event
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           RESPONSE=$(gh api -X POST repos/$TARGET_REPO/dispatches --input - <<EOF
           {
