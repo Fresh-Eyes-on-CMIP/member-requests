@@ -6,32 +6,27 @@ on:
 
 jobs:
   dispatch-event:
-    if: github.event.label.name == 'discussion-user'
     runs-on: ubuntu-latest
     steps:
-      - name: Get Issue Author
-        env:
-          ISSUE_NUMBER: "${{ github.event.issue.number }}"
-          REPO: "${{ github.repository }}"
-          GH_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+      - name: Get username from issue
         run: |
           USERNAME=$(gh api repos/$REPO/issues/$ISSUE_NUMBER --jq .user.login)
           if [[ -z "$USERNAME" ]]; then
             echo "Error: Could not retrieve username from issue."
             exit 1
           fi
-          echo "USERNAME=$USERNAME" >> $GITHUB_ENV
-      
-      - name: Trigger Dispatch in Another Repo
-        env:
-          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          TARGET_REPO: "Fresh-Eyes-on-CMIP/discussions"
-          USERNAME: "${{ env.USERNAME }}"
+          echo "Username retrieved: $USERNAME"
+      - name: Dispatch event
         run: |
-          RESPONSE=$(gh api repos/$TARGET_REPO/dispatches \
-            -f event_type=grant_read_access \
-            -f client_payload="{\"username\": \"$USERNAME\"}" 2>&1)
-          
+          RESPONSE=$(gh api -X POST repos/$TARGET_REPO/dispatches --input - <<EOF
+          {
+            "event_type": "read-access",
+            "client_payload": {
+              "username": "$USERNAME"
+            }
+          }
+          EOF
+          )
           if [[ $? -eq 0 ]]; then
             echo "Dispatch event triggered successfully."
             echo "SUCCESS=true" >> $GITHUB_ENV
@@ -39,24 +34,4 @@ jobs:
             echo "Error triggering dispatch event:"
             echo "$RESPONSE"
             echo "SUCCESS=false" >> $GITHUB_ENV
-            echo "ERROR_MESSAGE=$RESPONSE" >> $GITHUB_ENV
           fi
-
-      - name: Close Issue on Success
-        if: env.SUCCESS == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: "${{ github.event.issue.number }}"
-          REPO: "${{ github.repository }}"
-        run: |
-          gh issue close $ISSUE_NUMBER --repo $REPO --comment "Read access granted."
-
-      - name: Comment on Issue on Failure
-        if: env.SUCCESS == 'false'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_NUMBER: "${{ github.event.issue.number }}"
-          REPO: "${{ github.repository }}"
-          ERROR_MESSAGE: "${{ env.ERROR_MESSAGE }}"
-        run: |
-          gh issue comment $ISSUE_NUMBER --repo $REPO --body "Error triggering dispatch event:\n\`\`\`\n$ERROR_MESSAGE\n\`\`\`"
