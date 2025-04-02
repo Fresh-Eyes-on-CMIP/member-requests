@@ -39,3 +39,23 @@ jobs:
             echo "$RESPONSE"
             echo "SUCCESS=false" >> $GITHUB_ENV
           fi
+
+      
+      - name: Close Issue on Success
+        if: env.SUCCESS == 'true'
+        env:
+         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         ISSUE_NUMBER: "${{ github.event.issue.number }}"
+         REPO: "${{ github.repository }}"
+        run: |
+         gh issue close $ISSUE_NUMBER --repo $REPO --comment "Read access granted."
+        
+      - name: Comment on Issue on Failure
+        if: env.SUCCESS == 'false'
+        env:
+         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+         ISSUE_NUMBER: "${{ github.event.issue.number }}"
+         REPO: "${{ github.repository }}"
+         ERROR_MESSAGE: "${{ env.ERROR_MESSAGE }}"
+        run: |
+         gh issue comment $ISSUE_NUMBER --repo $REPO --body "Error triggering dispatch event:\n\`\`\`\n$ERROR_MESSAGE\n\`\`\`"
