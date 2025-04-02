@@ -34,12 +34,12 @@ jobs:
             exit 1
           fi
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GH_TOKEN: ${{ github.token }}
 
       - name: Dispatch event
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           USERNAME: ${{ env.USERNAME }}
         run: |
           RESPONSE=$(gh api -X POST repos/Fresh-Eyes-on-CMIP/dispatches --input - <<EOF
@@ -64,7 +64,7 @@ jobs:
       - name: Close Issue on Success
         if: env.SUCCESS == 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
         run: |
@@ -73,7 +73,7 @@ jobs:
       - name: Comment on Issue on Failure
         if: env.SUCCESS == 'false'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
           ERROR_MESSAGE: ${{ env.ERROR_MESSAGE }}
