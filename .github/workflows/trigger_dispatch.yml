@@ -12,7 +12,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          USERNAME=$(gh api repos/$REPO/issues/$ISSUE_NUMBER --jq .user.login)
+          USERNAME=$(gh issue view "$ISSUE_NUMBER" --repo "$REPO" --json user --jq .user.login)
           if [[ -z "$USERNAME" ]]; then
             echo "Error: Could not retrieve username from issue."
             exit 1
@@ -21,8 +21,8 @@ jobs:
       - name: Dispatch event
         env:
           GH_TOKEN: ${{ github.token }}
-          
         run: |
+          echo "USR: $USERNAME"
           RESPONSE=$(gh api -X POST repos/Fresh-Eyes-on-CMIP/dispatches --input - <<EOF
           {
             "event_type": "read-access",
