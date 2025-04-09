@@ -72,7 +72,9 @@ jobs:
           USERNAME: ${{ env.USERNAME }}
         run: |
           gh api \
-          -X PUT \
+          --method PUT \
+          -H "Accept: application/vnd.github+json" \
+          -H "X-GitHub-Api-Version: 2022-11-28" \
           /repos/Fresh-Eyes-on-CMIP/discussions/collaborators/$USERNAME \
           -f permission=read
           
