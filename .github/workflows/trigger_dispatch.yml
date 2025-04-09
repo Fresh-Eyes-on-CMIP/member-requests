@@ -83,7 +83,9 @@ jobs:
           # -d '{"permission":"read"}'
 
 
-          gh auth login --with-token <<< $pt
+          # gh auth login --with-token <<< $pt
+          export GH_TOKEN=$pt
+          gh auth login --with-token
           
           gh api \
           --method PUT \
