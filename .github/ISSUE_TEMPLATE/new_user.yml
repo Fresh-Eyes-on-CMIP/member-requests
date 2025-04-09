@@ -3,7 +3,7 @@ description: 'A form to add users to the open, but hudden discussions repository
 title: 'A new request to be added to the FEoC discussions: <name>'
 labels: ['discussion-user']
 assignees:
-  - bethdingley
+  - CMIP-IPO
 body:
 
 -   type: markdown
