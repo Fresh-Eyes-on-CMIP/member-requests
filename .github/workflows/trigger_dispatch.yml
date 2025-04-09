@@ -70,7 +70,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           USERNAME: ${{ env.USERNAME }}
-          PT: ${{secrets.CMIPIPO}}
+          PT: ${{ secrets.cmipipo }}
         run: |
           echo "/repos/Fresh-Eyes-on-CMIP/discussions/collaborators/${USERNAME} ${PT} "
 
