@@ -68,7 +68,7 @@ jobs:
 
       - name: Add user
         env:
-          GH_TOKEN: ${{ github.token }}
+          # GH_TOKEN: ${{ github.token }}
           USERNAME: ${{ env.USERNAME }}
           PT: ${{ secrets.cmipipo }}
         run: |
