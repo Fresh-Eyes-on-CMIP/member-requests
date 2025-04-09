@@ -71,14 +71,22 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           USERNAME: ${{ env.USERNAME }}
         run: |
-          echo "/repos/Fresh-Eyes-on-CMIP/discussions/collaborators/${USERNAME} "
-          
-          gh api \
-          --method PUT \
+          echo "/repos/Fresh-Eyes-on-CMIP/discussions/collaborators/${{USERNAME}} "
+
+          curl -L \
+          -X PUT \
           -H "Accept: application/vnd.github+json" \
+          -H "Authorization: Bearer ${{secrets.CMIPIPO}}" \
           -H "X-GitHub-Api-Version: 2022-11-28" \
-          /repos/Fresh-Eyes-on-CMIP/discussions/collaborators/${USERNAME} \
-          -f permission=read
+          https://api.github.com/repos/Fresh-Eyes-on-CMIP/discussions/collaborators/${{USERNAME}} \
+          -d '{"permission":"read"}'
+          
+          # gh api \
+          # --method PUT \
+          # -H "Accept: application/vnd.github+json" \
+          # -H "X-GitHub-Api-Version: 2022-11-28" \
+          # /repos/Fresh-Eyes-on-CMIP/discussions/collaborators/${USERNAME} \
+          # -f permission=read
           
       - name: Close Issue on Success
         if: env.SUCCESS == 'true'
