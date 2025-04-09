@@ -42,30 +42,40 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           GH_TOKEN: ${{ github.token }}
 
-      - name: Dispatch event
+      # - name: Dispatch event
+      #   env:
+      #     GH_TOKEN: ${{ github.token }}
+      #     USERNAME: ${{ env.USERNAME }}
+      #   run: |
+      #     RESPONSE=$(gh api -X POST repos/Fresh-Eyes-on-CMIP/discussions/actions/workflows/new_member.yml/dispatches --input - <<EOF
+      #     {
+      #       "event_type": "read-access",
+      #       "client_payload": {
+      #         "username": "$USERNAME"
+      #       }
+      #     }
+      #     EOF
+      #     )
+      #     if [[ $? -eq 0 ]]; then
+      #       echo "Dispatch event triggered successfully."
+      #       echo "SUCCESS=true" >> $GITHUB_ENV
+      #     else
+      #       echo "Error triggering dispatch event:"
+      #       echo "$RESPONSE"
+      #       echo "SUCCESS=false" >> $GITHUB_ENV
+      #       exit 1
+      #     fi
+
+      - name: Add user
         env:
           GH_TOKEN: ${{ github.token }}
           USERNAME: ${{ env.USERNAME }}
         run: |
-          RESPONSE=$(gh api -X POST repos/Fresh-Eyes-on-CMIP/actions/workflows/new_member.yml/dispatches --input - <<EOF
-          {
-            "event_type": "read-access",
-            "client_payload": {
-              "username": "$USERNAME"
-            }
-          }
-          EOF
-          )
-          if [[ $? -eq 0 ]]; then
-            echo "Dispatch event triggered successfully."
-            echo "SUCCESS=true" >> $GITHUB_ENV
-          else
-            echo "Error triggering dispatch event:"
-            echo "$RESPONSE"
-            echo "SUCCESS=false" >> $GITHUB_ENV
-            exit 1
-          fi
-
+          gh api \
+          -X PUT \
+          /repos/Fresh-Eyes-on-CMIP/discussions/collaborators/$USERNAME \
+          -f permission=read
+          
       - name: Close Issue on Success
         if: env.SUCCESS == 'true'
         env:
