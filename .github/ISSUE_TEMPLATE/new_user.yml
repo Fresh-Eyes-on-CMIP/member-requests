@@ -1,6 +1,6 @@
 name: 'new-member-discussions'
-description: 'A form to add users to the open, but hudden discussions repository'
-title: 'A new request to be added to the FEoC discussions: <name>'
+description: 'A form to add users to the open, but hidden discussions repository'
+title: 'Please add me to the Fresh Eyes Platform: <name>'
 labels: ['discussion-user']
 assignees:
   - CMIP-IPO
@@ -13,26 +13,17 @@ body:
             # Request to become a new user. 
 
             In order to keep our discussions free of spam and unrelated content, we require everyone to be an existing user on github. 
-            In filling out this form you will be added to the organisation allowing you to interact with private discussions. 
+            In filling out this form you will be added to the Fresh Eyes Platform, allowing you to interact the online discussions. 
           
           
             * The user account you are currently logged on with will be the one that gets registered *
     
--   id: reason
+-   type: checkboxes
+    id: reason
     attributes:
-        label: "Why do you want to join?"
-        description: |
-            Use this section to prove you are not a robot. 
+        label: "By completing this form, you confirm that you have read and agree to abide by the [Platform's Code of Conduct]<https://github.com/Fresh-Eyes-on-CMIP/discussions/blob/0be285fe5bed766dd9f55395870aa2ed63a0ae65/CODE_OF_CONDUCT.md>"
+        options: 
+            - label: I agree to abide by the Platform Code of Conduct.
             
-            You may also choose to provide any additional skills/information/tasks you may be interested in or want to be considered for. 
-            Note anything written here will be publically accesible.  
     validations:
         required: true
-    type: textarea
-
-
--   type: markdown
-    attributes:
-        value: |
-            Add link to FEOC mailing list registration [here](here.com)
-    
