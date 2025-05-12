@@ -12,18 +12,17 @@ body:
             ####
             # Request to become a new user. 
 
-            In order to keep our discussions free of spam and unrelated content, we require everyone to be an existing user on github. 
-            In filling out this form you will be added to the Fresh Eyes Platform, allowing you to interact the online discussions. 
+            In order to keep our discussions free of spam and unrelated content, we require everyone to be an existing user on GitHub. 
+            After filling out this form you will be added to the Fresh Eyes Platform, allowing you to interact the online discussions. Before you join, you much confirm that you have read and agree to abide by the [Platform's Code of Conduct]<https://github.com/Fresh-Eyes-on-CMIP/discussions/blob/0be285fe5bed766dd9f55395870aa2ed63a0ae65/CODE_OF_CONDUCT.md
           
-          
-            * The user account you are currently logged on with will be the one that gets registered *
+            *The user account you are currently logged on with will be the one that gets registered*
     
 -   type: checkboxes
     id: reason
     attributes:
-        label: "By completing this form, you confirm that you have read and agree to abide by the [Platform's Code of Conduct]<https://github.com/Fresh-Eyes-on-CMIP/discussions/blob/0be285fe5bed766dd9f55395870aa2ed63a0ae65/CODE_OF_CONDUCT.md>"
+        label: "Do you agree to abide by the Platform Code of Conduct?"
         options: 
-            - label: I agree to abide by the Platform Code of Conduct.
+            - label: I agree to abide by the Platform Code of Conduct. Please add me to the Fresh Eyes Platform!
             
     validations:
         required: true
