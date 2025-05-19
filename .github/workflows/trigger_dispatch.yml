@@ -20,80 +20,62 @@ jobs:
           fi
 
       - name: Retrieve Username from Issue
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           set -e
           echo "Fetching issue details for ISSUE_NUMBER: $ISSUE_NUMBER"
-          ISSUE_DETAILS=$(gh issue view $ISSUE_NUMBER --repo "$GITHUB_REPOSITORY" --json author)
+          ISSUE_DETAILS=$(gh issue view "$ISSUE_NUMBER" --repo "$GITHUB_REPOSITORY" --json author)
           echo "Issue Details: $ISSUE_DETAILS"
-          
+
           USERNAME=$(echo "$ISSUE_DETAILS" | jq -r '.author.login')
           echo "Username: $USERNAME"
-  
+
           if [[ -z "$USERNAME" ]]; then
             echo "Error: Username is empty."
             exit 1
           fi
-          
-          echo "Username: $USERNAME";
-          
+
           echo "USERNAME=$USERNAME" >> $GITHUB_ENV
-          
+
+      - name: Rename Issue to Include Username
         env:
-          ISSUE_NUMBER: ${{ github.event.issue.number }}
           GH_TOKEN: ${{ github.token }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          USERNAME: ${{ env.USERNAME }}
+          REPO: ${{ github.repository }}
+        run: |
+          ORIGINAL_TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q .title)
+          NEW_TITLE="[${USERNAME}] $ORIGINAL_TITLE"
+          echo "Renaming issue to: $NEW_TITLE"
+          gh issue edit $ISSUE_NUMBER --repo $REPO --title "$NEW_TITLE"
 
-      # - name: Dispatch event
-      #   env:
-      #     GH_TOKEN: ${{ github.token }}
-      #     USERNAME: ${{ env.USERNAME }}
-      #   run: |
-      #     RESPONSE=$(gh api -X POST repos/Fresh-Eyes-on-CMIP/discussions/actions/workflows/new_member.yml/dispatches --input - <<EOF
-      #     {
-      #       "event_type": "read-access",
-      #       "client_payload": {
-      #         "username": "$USERNAME"
-      #       }
-      #     }
-      #     EOF
-      #     )
-      #     if [[ $? -eq 0 ]]; then
-      #       echo "Dispatch event triggered successfully."
-      #       echo "SUCCESS=true" >> $GITHUB_ENV
-      #     else
-      #       echo "Error triggering dispatch event:"
-      #       echo "$RESPONSE"
-      #       echo "SUCCESS=false" >> $GITHUB_ENV
-      #       exit 1
-      #     fi
-
-      - name: Add user
+      - name: Add user to discussions with read access
         env:
-          # GH_TOKEN: ${{ github.token }}
           USERNAME: ${{ env.USERNAME }}
           PT: ${{ secrets.cmipipo }}
         run: |
-          echo "/repos/Fresh-Eyes-on-CMIP/discussions/collaborators/${USERNAME} ${PT} "
+          echo "Adding ${USERNAME} to discussions with read access..."
 
-          # curl -L \
-          # -X PUT \
-          # -H "Accept: application/vnd.github+json" \
-          # -H "Authorization: Bearer ${PT}" \
-          # -H "X-GitHub-Api-Version: 2022-11-28" \
-          # https://api.github.com/repos/Fresh-Eyes-on-CMIP/discussions/collaborators/${USERNAME} \
-          # -d '{"permission":"read"}'
+          echo "${PT}" | gh auth login --with-token
 
+          RESPONSE=$(gh api \
+            --method PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/Fresh-Eyes-on-CMIP/discussions/collaborators/${USERNAME} \
+            -f permission=read) || {
+              echo "Error adding collaborator"
+              echo "ERROR_MESSAGE=$RESPONSE" >> $GITHUB_ENV
+              echo "SUCCESS=false" >> $GITHUB_ENV
+              exit 1
+            }
 
-          # gh auth login --with-token <<< $pt
-          export GH_TOKEN=$pt
-          gh auth login --with-token
-          
-          gh api \
-          --method PUT \
-          -H "Accept: application/vnd.github+json" \
-          -H "X-GitHub-Api-Version: 2022-11-28" \
-          /repos/Fresh-Eyes-on-CMIP/discussions/collaborators/${USERNAME} \
-          -f permission=read
-          
+          echo "Collaborator added successfully"
+          echo "SUCCESS=true" >> $GITHUB_ENV
+
       - name: Close Issue on Success
         if: env.SUCCESS == 'true'
         env:
@@ -102,7 +84,7 @@ jobs:
           REPO: ${{ github.repository }}
         run: |
           gh issue close $ISSUE_NUMBER --repo $REPO --comment "Read access granted."
-      
+
       - name: Comment on Issue on Failure
         if: env.SUCCESS == 'false'
         env:
