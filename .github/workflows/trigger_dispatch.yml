@@ -2,7 +2,7 @@ name: Trigger Read Access Dispatch
 
 on:
   issues:
-    types: [opened, edited]
+    types: [opened, edited, labeled]
 
 jobs:
   dispatch-event:
@@ -16,7 +16,6 @@ jobs:
       - name: Check for ISSUE_NUMBER
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          PT: ${{ secrets.cmipipo }}
         run: |
           if [[ -z "$ISSUE_NUMBER" ]]; then
             echo "Error: ISSUE_NUMBER is not set."
@@ -24,8 +23,15 @@ jobs:
           else
             echo "ISSUE_NUMBER is set to $ISSUE_NUMBER"
           fi
-
-          gh auth login --with-token < "${PT}"
+          
+      - name: Authenticate GitHub CLI
+        env:
+          PT: ${{ secrets.cmipipo }}
+        run: |
+          echo "${PT}" | gh auth login --with-token || {
+            echo "GitHub authentication failed."
+            exit 1
+          }
 
       - name: Retrieve Username from Issue
         env:
