@@ -16,6 +16,7 @@ jobs:
       - name: Check for ISSUE_NUMBER
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          PT: ${{ secrets.cmipipo }}
         run: |
           if [[ -z "$ISSUE_NUMBER" ]]; then
             echo "Error: ISSUE_NUMBER is not set."
