@@ -24,6 +24,8 @@ jobs:
             echo "ISSUE_NUMBER is set to $ISSUE_NUMBER"
           fi
 
+          echo "${PT}" | gh auth login --with-token
+
       - name: Retrieve Username from Issue
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -70,7 +72,7 @@ jobs:
         run: |
           echo "Adding ${USERNAME} to discussions with read access..."
 
-          echo "${PT}" | gh auth login --with-token
+          
 
           RESPONSE=$(gh api \
             --method PUT \
