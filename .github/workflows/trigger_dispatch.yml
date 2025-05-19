@@ -25,7 +25,7 @@ jobs:
             echo "ISSUE_NUMBER is set to $ISSUE_NUMBER"
           fi
 
-          echo "${PT}" | gh auth login --with-token
+          gh auth login --with-token < "${PT}"
 
       - name: Retrieve Username from Issue
         env:
