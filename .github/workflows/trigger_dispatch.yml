@@ -86,7 +86,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
         run: |
-          gh issue comment $ISSUE_NUMBER --repo $REPO --body "✅ Read access granted!"
+          gh issue comment $ISSUE_NUMBER --repo $REPO --body "✅ Read access granted! You should now be able to access the [discussions](https://github.com/orgs/Fresh-Eyes-on-CMIP/discussions)"
           gh issue close $ISSUE_NUMBER --repo $REPO
 
       - name: Comment on Issue on Failure
