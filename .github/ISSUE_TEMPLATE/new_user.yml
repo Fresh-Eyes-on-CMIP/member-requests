@@ -2,8 +2,8 @@ name: 'new-member-discussions'
 description: 'A form to add users to the open, but hidden discussions repository'
 title: 'Please add me to the Fresh Eyes Platform'
 labels: ['discussion-user']
-assignees:
-  - CMIP-IPO
+# assignees:
+#   - CMIP-IPO
 body:
 
 -   type: markdown
