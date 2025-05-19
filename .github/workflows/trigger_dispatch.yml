@@ -5,9 +5,10 @@ on:
     types: [opened, edited]
 
 jobs:
-  if: contains(github.event.issue.labels.*.name, 'discussion-user')
   dispatch-event:
+    if: contains(github.event.issue.labels.*.name, 'discussion-user')
     runs-on: self-hosted
+
     steps:
       - name: Debug GitHub Context
         env:
@@ -24,15 +25,6 @@ jobs:
           else
             echo "ISSUE_NUMBER is set to $ISSUE_NUMBER"
           fi
-          
-      # - name: Authenticate GitHub CLI
-      #   env:
-      #     # GH_TOKEN: ${{ secrets.cmipipo }}
-      #   run: |
-      #     gh auth login --with-token || {
-      #       echo "GitHub authentication failed."
-      #       exit 1
-      #     }
 
       - name: Retrieve Username from Issue
         env:
@@ -59,30 +51,19 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.cmipipo }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          USERNAME: ${{ env.USERNAME }}
           REPO: ${{ github.repository }}
         run: |
-          ORIGINAL_TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q .title) || {
-            echo "Error fetching issue title. Ensure token permissions are correct."
-            exit 1
-          }
+          ORIGINAL_TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q .title)
           NEW_TITLE="[${USERNAME}] $ORIGINAL_TITLE"
           echo "Renaming issue to: $NEW_TITLE"
-          gh issue edit $ISSUE_NUMBER --repo $REPO --title "$NEW_TITLE" || {
-            echo "Error renaming issue. Ensure token permissions are correct."
-            exit 1
-          }
+          gh issue edit $ISSUE_NUMBER --repo $REPO --title "$NEW_TITLE"
 
       - name: Add user to discussions with read access
         env:
           USERNAME: ${{ env.USERNAME }}
-          # PT: ${{ secrets.cmipipo }}
           GH_TOKEN: ${{ secrets.cmipipo }}
         run: |
           echo "Adding ${USERNAME} to discussions with read access..."
-
-          
-
           RESPONSE=$(gh api \
             --method PUT \
             -H "Accept: application/vnd.github+json" \
@@ -105,7 +86,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
         run: |
-          gh issue comment $ISSUE_NUMBER --repo $REPO --body "Read access granted!"
+          gh issue comment $ISSUE_NUMBER --repo $REPO --body "✅ Read access granted!"
           gh issue close $ISSUE_NUMBER --repo $REPO
 
       - name: Comment on Issue on Failure
@@ -116,4 +97,4 @@ jobs:
           REPO: ${{ github.repository }}
           ERROR_MESSAGE: ${{ env.ERROR_MESSAGE }}
         run: |
-          gh issue comment $ISSUE_NUMBER --repo $REPO --body "Error triggering dispatch event:\n```\n$ERROR_MESSAGE\n```"
+          gh issue comment $ISSUE_NUMBER --repo $REPO --body "❌ Error triggering dispatch event:\n```\n$ERROR_MESSAGE\n```"
