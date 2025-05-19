@@ -2,9 +2,10 @@ name: Trigger Read Access Dispatch
 
 on:
   issues:
-    types: [opened, edited, labeled]
+    types: [opened, edited]
 
 jobs:
+  if: contains(github.event.issue.labels.*.name, 'discussion-user')
   dispatch-event:
     runs-on: self-hosted
     steps:
@@ -104,7 +105,8 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
         run: |
-          gh issue close $ISSUE_NUMBER --repo $REPO --comment "Read access granted."
+          gh issue comment $ISSUE_NUMBER --repo $REPO --body "Read access granted!"
+          gh issue close $ISSUE_NUMBER --repo $REPO
 
       - name: Comment on Issue on Failure
         if: env.SUCCESS == 'false'
