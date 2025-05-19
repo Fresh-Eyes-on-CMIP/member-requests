@@ -23,7 +23,7 @@ body:
     attributes:
         label: "Do you agree to abide by the Platform Code of Conduct?"
         options: 
-            - label: I agree to abide by the Platform Code of Conduct. Please add me to the Fresh Eyes Platform!
+            - I agree to abide by the Platform Code of Conduct. Please add me to the Fresh Eyes Platform!
         default: 0
     validations:
         required: true
