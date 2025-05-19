@@ -24,19 +24,19 @@ jobs:
             echo "ISSUE_NUMBER is set to $ISSUE_NUMBER"
           fi
           
-      - name: Authenticate GitHub CLI
-        env:
-          GH_TOKEN: ${{ secrets.cmipipo }}
-        run: |
-          gh auth login --with-token || {
-            echo "GitHub authentication failed."
-            exit 1
-          }
+      # - name: Authenticate GitHub CLI
+      #   env:
+      #     # GH_TOKEN: ${{ secrets.cmipipo }}
+      #   run: |
+      #     gh auth login --with-token || {
+      #       echo "GitHub authentication failed."
+      #       exit 1
+      #     }
 
       - name: Retrieve Username from Issue
         env:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
-          GH_TOKEN: ${{ secrets.cmipipo }}
+          # GH_TOKEN: ${{ secrets.cmipipo }}
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: |
           set -e
@@ -56,7 +56,7 @@ jobs:
 
       - name: Rename Issue to Include Username
         env:
-          GH_TOKEN: ${{ secrets.cmipipo }}
+          # GH_TOKEN: ${{ secrets.cmipipo }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           USERNAME: ${{ env.USERNAME }}
           REPO: ${{ github.repository }}
@@ -76,7 +76,7 @@ jobs:
         env:
           USERNAME: ${{ env.USERNAME }}
           PT: ${{ secrets.cmipipo }}
-          GH_TOKEN: ${{ secrets.cmipipo }}
+          # GH_TOKEN: ${{ secrets.cmipipo }}
         run: |
           echo "Adding ${USERNAME} to discussions with read access..."
 
@@ -100,7 +100,7 @@ jobs:
       - name: Close Issue on Success
         if: env.SUCCESS == 'true'
         env:
-          GH_TOKEN: ${{ secrets.cmipipo }}
+          # GH_TOKEN: ${{ secrets.cmipipo }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
         run: |
@@ -109,7 +109,7 @@ jobs:
       - name: Comment on Issue on Failure
         if: env.SUCCESS == 'false'
         env:
-          GH_TOKEN: ${{ secrets.cmipipo }}
+          # GH_TOKEN: ${{ secrets.cmipipo }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
           ERROR_MESSAGE: ${{ env.ERROR_MESSAGE }}
