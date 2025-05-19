@@ -2,7 +2,7 @@ name: Trigger Read Access Dispatch
 
 on:
   issues:
-    types: [opened, labeled]
+    types: [opened, edited]
 
 jobs:
   dispatch-event:
