@@ -24,14 +24,14 @@ jobs:
             echo "ISSUE_NUMBER is set to $ISSUE_NUMBER"
           fi
           
-      # - name: Authenticate GitHub CLI
-      #   env:
-      #     PT: ${{ secrets.cmipipo }}
-      #   run: |
-      #     echo "${PT}" | gh auth login --with-token || {
-      #       echo "GitHub authentication failed."
-      #       exit 1
-      #     }
+      - name: Authenticate GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.cmipipo }}
+        run: |
+          gh auth login --with-token || {
+            echo "GitHub authentication failed."
+            exit 1
+          }
 
       - name: Retrieve Username from Issue
         env:
