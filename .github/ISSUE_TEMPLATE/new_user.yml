@@ -1,6 +1,6 @@
 name: 'new-member-discussions'
 description: 'A form to add users to the open, but hidden discussions repository'
-title: 'Please add me to the Fresh Eyes Platform: <name>'
+title: 'Please add me to the Fresh Eyes Platform'
 labels: ['discussion-user']
 assignees:
   - CMIP-IPO
@@ -18,12 +18,12 @@ body:
           
             *The user account you are currently logged on with will be the one that gets registered*
     
--   type: checkboxes
+-   type: dropdown
     id: reason
     attributes:
         label: "Do you agree to abide by the Platform Code of Conduct?"
         options: 
             - label: I agree to abide by the Platform Code of Conduct. Please add me to the Fresh Eyes Platform!
-            
+        default: 0
     validations:
         required: true
