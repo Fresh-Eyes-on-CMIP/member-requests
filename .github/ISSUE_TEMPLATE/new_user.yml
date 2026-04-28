@@ -19,7 +19,7 @@ body:
             *The user account you are currently logged on with will be the one that gets registered*
             
 -   type: dropdown
-    id: reason
+    id: membership
     attributes:
         label: "You must have registered to join the Fresh Eyes Directory before you can join the platform. Do you confirm that you have registered for the Fresh Eyes Directory already?"
         options: 
