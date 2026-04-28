@@ -17,6 +17,16 @@ body:
             Before you join, you much confirm that you have read and agree to abide by the [Platform's Code of Conduct](https://wcrp-cmip.org/wp-content/uploads/2025/05/The-Fresh-Eyes-Platform-Code-of-Conduct.pdf)
           
             *The user account you are currently logged on with will be the one that gets registered*
+            
+-   type: dropdown
+    id: reason
+    attributes:
+        label: "You must have registered to join the Fresh Eyes Directory before you can join the platform. Do you confirm that you have registered for the Fresh Eyes Directory already?"
+        options: 
+            - I confirm I have registered for the Fresh Eyes Directory.
+        default: 0
+    validations:
+        required: true
     
 -   type: dropdown
     id: reason
