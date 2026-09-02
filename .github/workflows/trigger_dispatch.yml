@@ -10,7 +10,8 @@ jobs:
   dispatch-event:
     if: contains(github.event.issue.labels.*.name, 'discussion-user')
     runs-on: self-hosted
-
+    environment: memberadd
+    
     steps:
       - name: Debug GitHub Context
         env:
