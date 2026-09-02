@@ -7,4 +7,4 @@ A repository to host the new member requests.
 
 
 > [!CAUTION]
-> Occasionally Microsoft downtime or Token renewal can result in the automations of this repository failing (very rare). If this happens please contact the CMIP-IPo and we will remedy it immediately. Doing so will also help those registering after you 
+> Occasionally Microsoft downtime or Token renewal can result in the automations of this repository failing (very rare). If this happens please contact the CMIP-IPO and we will remedy it immediately. Doing so will also help those registering after you 
