@@ -55,6 +55,7 @@ jobs:
           GH_TOKEN: ${{ secrets.cmipipo }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           REPO: ${{ github.repository }}
+          USERNAME: ${{ env.USERNAME }}
         run: |
           ORIGINAL_TITLE=$(gh issue view $ISSUE_NUMBER --repo $REPO --json title -q .title)
           NEW_TITLE="[${USERNAME}] $ORIGINAL_TITLE"
